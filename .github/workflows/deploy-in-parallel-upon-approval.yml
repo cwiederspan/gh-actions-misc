@@ -1,5 +1,7 @@
 on: [workflow_dispatch]
 
+name: Deploy in Parallel Upon Approval
+
 jobs:
   approval:
     runs-on: ubuntu-latest
@@ -19,6 +21,9 @@ jobs:
     - name: deploying
       run: |
         echo "Deploying parallel #1..."
+        sleep $[ ( $RANDOM % 10 )  + 1 ]s
+        echo $MY_SECRET_ENV
+        echo "Deploying parallel #1 complete!"
     
   release-2:
     needs: approval
@@ -29,6 +34,9 @@ jobs:
     - name: deploying
       run: |
         echo "Deploying parallel #2..."
+        sleep $[ ( $RANDOM % 10 )  + 1 ]s
+        echo $MY_SECRET_ENV
+        echo "Deploying parallel #2 complete!"
     
   release-3:
     needs: approval
@@ -39,3 +47,6 @@ jobs:
     - name: deploying
       run: |
         echo "Deploying parallel #3..."
+        sleep $[ ( $RANDOM % 10 )  + 1 ]s
+        echo $MY_SECRET_ENV
+        echo "Deploying parallel #3 complete!"
