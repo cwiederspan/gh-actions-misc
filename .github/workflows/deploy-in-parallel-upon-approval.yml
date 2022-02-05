@@ -19,10 +19,12 @@ jobs:
         name: production
     steps:
     - name: deploying
+      env:
+        MY_SECRET: ${{ secrets.MY_ENV_SECRET }}
       run: |
         echo "Deploying parallel #1..."
         sleep $[ ( $RANDOM % 10 )  + 1 ]s
-        echo $MY_ENV_SECRET
+        echo $MY_SECRET
         echo "Deploying parallel #1 complete!"
     
   release-2:
@@ -32,10 +34,12 @@ jobs:
         name: production
     steps:
     - name: deploying
+      env:
+        MY_SECRET: ${{ secrets.MY_ENV_SECRET }}
       run: |
         echo "Deploying parallel #2..."
         sleep $[ ( $RANDOM % 10 )  + 1 ]s
-        echo $MY_ENV_SECRET
+        echo $MY_SECRET
         echo "Deploying parallel #2 complete!"
     
   release-3:
@@ -45,8 +49,10 @@ jobs:
         name: production
     steps:
     - name: deploying
+      env:
+        MY_SECRET: ${{ secrets.MY_ENV_SECRET }}
       run: |
         echo "Deploying parallel #3..."
         sleep $[ ( $RANDOM % 10 )  + 1 ]s
-        echo $MY_ENV_SECRET
+        echo $MY_SECRET
         echo "Deploying parallel #3 complete!"
