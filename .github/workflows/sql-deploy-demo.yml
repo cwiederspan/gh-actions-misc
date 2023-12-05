@@ -24,7 +24,6 @@ jobs:
     - uses: azure/sql-action@v2.2
       with:
         connection-string: ${{ steps.get-kv-conn-str.outputs.ConnectionString}}
-        path: './Database.dacpac'
         action: 'script'
         arguments: 'select getdate()'
  
