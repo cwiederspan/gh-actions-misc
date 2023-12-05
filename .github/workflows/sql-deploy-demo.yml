@@ -12,18 +12,20 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Retrieve secret from KV
+    - id: get-kv-conn-str
+      name: Retrieve secret from KV
       uses: azure/cli@v1
       with:
         inlineScript: |
-          secretValue=$(az keyvault secret show --name "dbconnstr" --vault-name "gh-actions-20231204-kv" --query "value")
-          echo "CONN_STR="$secretValue >> $GITHUB_ENV
+          kv_secret=$(az keyvault secret show --name "dbconnstr" --vault-name "gh-actions-20231204-kv" --query value -o tsv)
+          echo "::add-mask::$kv_secret"
+          echo "ConnectionString=$kv_secret" >> "$GITHUB_OUTPUT"
 
     - uses: azure/sql-action@v2.2
       with:
-        connection-string: $CONN_STR
+        connection-string: ${{ steps.get-kv-conn-str.ConnectionString}}
         path: './Database.dacpac'
-        action: 'publish'
+        action: 'script'
         arguments: 'select getdate()'
  
 
