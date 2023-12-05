@@ -21,7 +21,7 @@ jobs:
 
     - uses: azure/sql-action@v2.2
       with:
-        connection-string: ${{ CONN_STR }}
+        connection-string: $CONN_STR
         path: './Database.dacpac'
         action: 'publish'
         arguments: 'select getdate()'
