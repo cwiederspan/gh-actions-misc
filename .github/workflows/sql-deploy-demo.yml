@@ -16,9 +16,16 @@ jobs:
       uses: azure/cli@v1
       with:
         inlineScript: |
-          secretValue=$(az keyvault secret show --name "secret1" --vault-name "gh-actions-20231204-kv" --query "value")
-          echo "SECRETVALUE="$secretValue >> $GITHUB_ENV
+          secretValue=$(az keyvault secret show --name "dbconnstr" --vault-name "gh-actions-20231204-kv" --query "value")
+          echo "CONN_STR="$secretValue >> $GITHUB_ENV
 
+    - uses: azure/sql-action@v2.2
+      with:
+        connection-string: ${{ CONN_STR }}
+        path: './Database.dacpac'
+        action: 'publish'
+        arguments: 'select getdate()'
+ 
 
 # jobs:
 #   approval:
