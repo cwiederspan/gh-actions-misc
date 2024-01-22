@@ -32,7 +32,7 @@ az deployment group create \
 
 
 
-//az keyvault secret set --vault-name $RG_NAME-kv --name "dbconnstr" --value "Server=tcp:gh-actions-20231204-sql.database.windows.net,1433;Initial Catalog=mydatabase;Persist Security Info=False;User ID=sqlsa;Password=my1sqlP@ssword;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+//az keyvault secret set --vault-name $RG_NAME-kv --name "dbconnstr" --value "Server=tcp:gh-actions-20231204-sql.database.windows.net,1433;Initial Catalog=mydatabase;Persist Security Info=False;User ID=sqlsa;Password=XXXXXX;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
 
 # TODO: Add permissions to the service principal for the key vault
 
