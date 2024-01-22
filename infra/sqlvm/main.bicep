@@ -239,6 +239,20 @@ resource sqlVm 'Microsoft.SqlVirtualMachine/sqlVirtualMachines@2023-01-01-previe
   }
 }
 
+resource deploymentscript 'Microsoft.Compute/virtualMachines/runCommands@2022-03-01' = {
+  parent: vm
+  name: 'OpenVmFirewallForSql'
+  location: location
+  properties: {
+    source: {
+      script: '''
+        New-NetFirewallRule -DisplayName "Microsoft SQL (Default Instance)" -Direction Inbound -LocalPort 1433 -Protocol TCP -Action Allow -Description "Allow traffic to the Default Instance of Microsoft SQL Server"
+        New-NetFirewallRule -DisplayName "Microsoft SQL (Browser Service)" -Direction Inbound -LocalPort 1434 -Protocol UDP -Action Allow -Description "Allow traffic to the Browser Service of Microsoft SQL Server"
+      '''
+    }
+  }
+}
+
 resource kv 'Microsoft.KeyVault/vaults@2022-07-01' = {
   name: '${baseName}-kv'
   location: location
