@@ -32,10 +32,6 @@ var roleIdMapping = {
   'Key Vault Secrets User': '4633458b-17de-408a-b874-0445c86b69e6'
 }
 
-// resource stg 'Microsoft.Storage/storageAccounts@2022-09-01' existing = {
-//   name: 'examplestorage'
-// }
-
 resource storageAccount 'Microsoft.Storage/storageAccounts@2022-05-01' = {
   name: '${namePrefix}${nameBase}${nameSuffix}'
   location: location
@@ -77,11 +73,9 @@ resource publicIp 'Microsoft.Network/publicIPAddresses@2022-05-01' = {
   }
   properties: {
     publicIPAllocationMethod: 'Static'
-    /*
     dnsSettings: {
-      domainNameLabel: dnsLabelPrefix
+      domainNameLabel: baseName
     }
-    */
   }
 }
 
@@ -275,11 +269,11 @@ resource kv 'Microsoft.KeyVault/vaults@2022-07-01' = {
   }
 }
 
-resource secret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
+resource dbSecret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
   parent: kv
-  name: 'something'
+  name: 'DatabaseConnectionString'
   properties: {
-    value: 'Hello, World!'
+    value: 'Server=tcp:${publicIp.properties.dnsSettings.fqdn},1433;Initial Catalog=mydatabase;Persist Security Info=False;User ID=${sqlUsername};Password=${sqlPassword};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
   }
 }
 

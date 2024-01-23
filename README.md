@@ -18,8 +18,20 @@ az login --tenant $TENANT_ID
 # Confirm Azure Account
 az account show
 
+# Create the Resource Group
 az group create -g $RG_NAME -l $LOCATION
 
+# Create an SP that has the permissions to contribute to the Resource Group
+AZURE_CREDENTIALS=$(az ad sp create-for-rbac \
+  --name $RG_NAME-sp \
+  --role contributor \
+  --scopes /subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RG_NAME \
+  --json-auth)
+
+# Echo out the credentials
+ECHO $AZURE_CREDENTIALS
+
+# Execute the Bicep file to stand up the Infra
 az deployment group create \
   --name deploy-gh-actions \
   --resource-group $RG_NAME \
@@ -30,18 +42,7 @@ az deployment group create \
   sqlPassword=$SQL_PASSWORD \
   kvSecretReaderSpAppObjId=$KEYVAULT_APP_OBJ_ID
 
-
-
-//az keyvault secret set --vault-name $RG_NAME-kv --name "dbconnstr" --value "Server=tcp:gh-actions-20231204-sql.database.windows.net,1433;Initial Catalog=mydatabase;Persist Security Info=False;User ID=sqlsa;Password=XXXXXX;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
-
-# TODO: Add permissions to the service principal for the key vault
-
-AZURE_CREDENTIALS=$(az ad sp create-for-rbac \
-  --name $RG_NAME-sp \
-  --role contributor \
-  --scopes /subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RG_NAME \
-  --json-auth)
-
+# Set the credentials into the GitHub Secrets
 gh secret set AZURE_CREDENTIALS -a actions -b"$AZURE_CREDENTIALS"
 
 # Cleanup
