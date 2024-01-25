@@ -119,6 +119,19 @@ resource networkSecurityGroup 'Microsoft.Network/networkSecurityGroups@2022-05-0
         }
       }
       {
+        name: 'allow-22-ssh'
+        properties: {
+          priority: 1030
+          access: 'Allow'
+          direction: 'Inbound'
+          destinationPortRange: '22'
+          protocol: 'Tcp'
+          sourcePortRange: '*'
+          sourceAddressPrefix: '*'
+          destinationAddressPrefix: '*'
+        }
+      }
+      {
         name: 'allow-1433-sql'
         properties: {
           priority: 1010

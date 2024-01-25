@@ -1,5 +1,5 @@
-name: GitHub Actions PS Remoting Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions - Linux Runner 🚀
+name: GitHub Actions PS Remoting Demo - Linux Runner
+run-name: ${{ github.actor }} is testing out GitHub Actions - Linux Runner ${{ github.ref }} 🚀
 on: 
   push:
     branches: [ main ]
