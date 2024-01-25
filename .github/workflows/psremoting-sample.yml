@@ -24,7 +24,7 @@ jobs:
           $secpasswd = ConvertTo-SecureString ${{ secrets.VM_PASSWORD }} -AsPlainText -Force
           write-output "${{ vars.VM_USERNAME }} is the current username"
           $mycreds = New-Object System.Management.Automation.PSCredential ("${{ vars.VM_USERNAME }}", $secpasswd)
-          $session = New-PSSession -ComputerName cw-sql-test.sullivanenterprises.org -Credential $mycreds
+          $session = New-PSSession -ComputerName cw-sql-test.sullivanenterprises.org -Credential $mycreds -UseSSL -Port 5986
           Invoke-Command -Session $session -ScriptBlock { invoke-sqlcmd -query "SELECT TOP (1000) [optname],[value],[major_version],[minor_version],[revision],[install_failures] FROM [master].[dbo].[MSreplication_options]" -ServerInstance 'SQLVM001' }
           Remove-PSSession -Session $session
       - run: echo "🍏 This job's status is ${{ job.status }}."
