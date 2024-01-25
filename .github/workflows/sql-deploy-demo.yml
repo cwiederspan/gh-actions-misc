@@ -5,6 +5,8 @@ name: SQL Deploy Demo
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      BASE_NAME: gh-actions-20240121
     steps:
     - uses: actions/checkout@main
 
@@ -17,7 +19,7 @@ jobs:
       uses: azure/cli@v1
       with:
         inlineScript: |
-          kv_secret=$(az keyvault secret show --name "dbconnstr" --vault-name "gh-actions-20231204-kv" --query value -o tsv)
+          kv_secret=$(az keyvault secret show --name "DatabaseConnectionString" --vault-name "$BASE_NAME-kv" --query value -o tsv)
           echo "::add-mask::$kv_secret"
           echo "ConnectionString=$kv_secret" >> "$GITHUB_OUTPUT"
 
