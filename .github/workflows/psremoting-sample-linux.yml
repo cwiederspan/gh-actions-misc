@@ -1,0 +1,31 @@
+name: GitHub Actions PS Remoting Demo
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+on: 
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: List files in the repository
+        run: |
+          ls ${{ github.workspace }}
+      - name: Create private key for SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -t rsa cw-sql-test.sullivanenterprises.org >> ~/.ssh/known_hosts
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: PsRemoting
+        shell: pwsh
+        run: |
+          enter-pssession -computername cw-sql-test.sullivanenterprises.org -username ${{ vars.VM_USERNAME }} -keyfilepath ~/.ssh/id_rsa
+          invoke-sqlcmd -query "SELECT TOP (1000) [optname],[value],[major_version],[minor_version],[revision],[install_failures] FROM [master].[dbo].[MSreplication_options]" -ServerInstance 'SQLVM001'
+          exit-pssession
+      - run: echo "🍏 This job's status is ${{ job.status }}."
