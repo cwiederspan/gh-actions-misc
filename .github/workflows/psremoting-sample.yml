@@ -22,8 +22,8 @@ jobs:
           # Set-Item WSMan:\localhost\Client\TrustedHosts -Value '*'
           # winrm set winrm/config/client '@{TrustedHosts="*"}'
           $secpasswd = ConvertTo-SecureString ${{ secrets.VM_PASSWORD }} -AsPlainText -Force
-          $mycreds = New-Object System.Management.Automation.PSCredential ("tjs", $secpasswd)
+          $mycreds = New-Object System.Management.Automation.PSCredential ("${{ env.VM_USERNAME }}", $secpasswd)
           $session = New-PSSession -ComputerName cw-sql-test.sullivanenterprises.org -Credential $mycreds
-          Invoke-Command -Session $session -ScriptBlock { Get-Process }
+          Invoke-Command -Session $session -ScriptBlock { invoke-sqlcmd -query "SELECT TOP (1000) [optname],[value],[major_version],[minor_version],[revision],[install_failures] FROM [master].[dbo].[MSreplication_options]" -ServerInstance 'SQLVM001' }
           Remove-PSSession -Session $session
       - run: echo "🍏 This job's status is ${{ job.status }}."
