@@ -1,0 +1,29 @@
+name: GitHub Actions PS Remoting Demo
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+on: 
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: windows-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: List files in the repository
+        run: |
+          ls ${{ github.workspace }}
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: PsRemoting
+        shell: pwsh
+        run: |
+          # Set-Item WSMan:\localhost\Client\TrustedHosts -Value '*'
+          # winrm set winrm/config/client '@{TrustedHosts="*"}'
+          $secpasswd = ConvertTo-SecureString ${{ secrets.VM_PASSWORD }} -AsPlainText -Force
+          $mycreds = New-Object System.Management.Automation.PSCredential ("tjs", $secpasswd)
+          $session = New-PSSession -ComputerName cw-sql-test.sullivanenterprises.org -Credential $mycreds
+          Invoke-Command -Session $session -ScriptBlock { Get-Process }
+          Remove-PSSession -Session $session
+      - run: echo "🍏 This job's status is ${{ job.status }}."

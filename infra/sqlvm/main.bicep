@@ -131,6 +131,19 @@ resource networkSecurityGroup 'Microsoft.Network/networkSecurityGroups@2022-05-0
           destinationAddressPrefix: '*'
         }
       }
+      {
+        name: 'allow-psremoting'
+        properties: {
+          priority: 1020
+          access: 'Allow'
+          direction: 'Inbound'
+          destinationPortRange: '5986'
+          protocol: 'Tcp'
+          sourcePortRange: '*'
+          sourceAddressPrefix: '*'
+          destinationAddressPrefix: '*'
+        }
+      }
     ]
   }
 }
