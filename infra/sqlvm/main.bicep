@@ -286,7 +286,11 @@ resource dbSecret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
   parent: kv
   name: 'DatabaseConnectionString'
   properties: {
+<<<<<<< HEAD
     value: 'Server=tcp:${publicIp.properties.dnsSettings.fqdn},1433;Persist Security Info=False;User ID=${sqlUsername};Password=${sqlPassword};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
+=======
+    value: 'Server=tcp:${publicIp.properties.dnsSettings.fqdn},1433;Initial Catalog=master;Persist Security Info=False;User ID=${sqlUsername};Password=${sqlPassword};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
+>>>>>>> ad286e9 (Updated KV connection string)
   }
 }
 
