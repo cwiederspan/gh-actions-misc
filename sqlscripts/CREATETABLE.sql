@@ -1,3 +1,5 @@
+CREATE DATABASE MyDatabase;
+
 CREATE TABLE Persons (
     PersonID int,
     LastName varchar(255),
