@@ -16,8 +16,8 @@ jobs:
       - name: Create private key for SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' | ssh-add -
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/id_rsa
+          # echo "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' | ssh-add -
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -t rsa cw-sql-test.sullivanenterprises.org >> ~/.ssh/known_hosts
       - uses: azure/login@v1
