@@ -27,6 +27,7 @@ jobs:
         shell: pwsh
         run: |
           ls ~/.ssh
+          file ~/.ssh/id_rsa
           head -n 2 ~/.ssh/id_rsa
           tail -n 2 ~/.ssh/id_rsa
           enter-pssession -hostname cw-sql-test.sullivanenterprises.org -username ${{ vars.VM_USERNAME }} -keyfilepath ~/.ssh/id_rsa
