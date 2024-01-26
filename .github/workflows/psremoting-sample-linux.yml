@@ -26,6 +26,8 @@ jobs:
         shell: pwsh
         run: |
           ls ~/.ssh
+          head -n 2 ~/.ssh/id_rsa
+          tail -n 2 ~/.ssh/id_rsa
           enter-pssession -hostname cw-sql-test.sullivanenterprises.org -username ${{ vars.VM_USERNAME }} -keyfilepath ~/.ssh/id_rsa
           invoke-sqlcmd -query "SELECT TOP (1000) [optname],[value],[major_version],[minor_version],[revision],[install_failures] FROM [master].[dbo].[MSreplication_options]" -ServerInstance 'SQLVM001'
           exit-pssession
