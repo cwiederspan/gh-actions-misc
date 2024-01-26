@@ -20,17 +20,19 @@ jobs:
           # echo "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' | ssh-add -
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -t rsa cw-sql-test.sullivanenterprises.org >> ~/.ssh/known_hosts
-      - uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - name: PsRemoting
-        shell: pwsh
-        run: |
-          ls ~/.ssh
-          file ~/.ssh/id_rsa
-          head -n 2 ~/.ssh/id_rsa
-          tail -n 2 ~/.ssh/id_rsa
-          enter-pssession -hostname cw-sql-test.sullivanenterprises.org -username ${{ vars.VM_USERNAME }} -keyfilepath ~/.ssh/id_rsa
-          invoke-sqlcmd -query "SELECT TOP (1000) [optname],[value],[major_version],[minor_version],[revision],[install_failures] FROM [master].[dbo].[MSreplication_options]" -ServerInstance 'SQLVM001'
-          exit-pssession
+
+          ssh vmadmin001@cw-sql-test.sullivanenterprises.org "pwsh -c .\test.ps1"
+      # - uses: azure/login@v1
+      #   with:
+      #     creds: ${{ secrets.AZURE_CREDENTIALS }}
+      # - name: PsRemoting
+      #   shell: pwsh
+      #   run: |
+      #     ls ~/.ssh
+      #     file ~/.ssh/id_rsa
+      #     head -n 2 ~/.ssh/id_rsa
+      #     tail -n 2 ~/.ssh/id_rsa
+      #     enter-pssession -hostname cw-sql-test.sullivanenterprises.org -username ${{ vars.VM_USERNAME }} -keyfilepath ~/.ssh/id_rsa
+      #     invoke-sqlcmd -query "SELECT TOP (1000) [optname],[value],[major_version],[minor_version],[revision],[install_failures] FROM [master].[dbo].[MSreplication_options]" -ServerInstance 'SQLVM001'
+      #     exit-pssession
       - run: echo "🍏 This job's status is ${{ job.status }}."
